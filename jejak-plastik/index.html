@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Jejak Plastik VR | Rumah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/rumah.js"></script>
+</head>
+<body>
+  <div class="petunjuk">
+    <strong>Laptop:</strong> seret layar untuk melihat sekeliling, klik tombol biru.<br>
+    <strong>HP:</strong> gerakkan HP, tatap tombol biru 1,5 detik.
+  </div>
+
+  <a-scene jp-setup="umur: baru saja habis diminum" loading-screen="dotsColor: #1F5FD1; backgroundColor: #E4F2EF">
+
+    <!-- Lingkungan: langit cerah dan rumput -->
+    <a-entity environment="preset: default; seed: 4; skyType: gradient; skyColor: #8FD3F4; horizonColor: #E9F7FC;
+                           lighting: none; ground: flat; groundTexture: walkernoise; groundColor: #86B86A; groundColor2: #7AAE5F;
+                           dressing: trees; dressingAmount: 10; dressingColor: #4E8F4A; grid: none; fog: 0"></a-entity>
+
+    <!-- Cahaya -->
+    <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.8"></a-entity>
+    <a-entity light="type: directional; color: #FFF4DD; intensity: 1.2" position="2 5 3"></a-entity>
+
+    <!-- Kamera (posisi mata pengguna) -->
+    <a-entity id="kamera" camera look-controls wasd-controls="enabled: false" position="0 1.6 0"></a-entity>
+
+    <!-- Rumah di latar belakang (objek primitif) -->
+    <a-entity id="rumah" position="0 0 -7">
+      <a-box width="9" height="3.2" depth="0.3" position="0 1.6 0" color="#F1D3A6"></a-box>
+      <a-cylinder radius="1.2" height="9.8" segments-radial="3" position="0 3.75 0" rotation="0 0 90"
+                  scale="1 1 0.5" color="#B5532F"></a-cylinder>
+      <a-box width="1.1" height="2.1" depth="0.1" position="0 1.05 0.2" color="#7A4B2A"></a-box>
+      <a-box width="1.4" height="1" depth="0.1" position="-2.6 1.8 0.2" color="#BFE6F7"></a-box>
+      <a-box width="1.4" height="1" depth="0.1" position="2.6 1.8 0.2" color="#BFE6F7"></a-box>
+    </a-entity>
+
+    <!-- Meja kecil dengan botol di atasnya -->
+    <a-entity id="meja" position="1.25 0 -1.25">
+      <a-box width="0.8" height="0.06" depth="0.6" position="0 0.75 0" color="#9C6B43"></a-box>
+      <a-cylinder radius="0.03" height="0.75" position="-0.33 0.375 -0.23" color="#7A4B2A"></a-cylinder>
+      <a-cylinder radius="0.03" height="0.75" position="0.33 0.375 -0.23" color="#7A4B2A"></a-cylinder>
+      <a-cylinder radius="0.03" height="0.75" position="-0.33 0.375 0.23" color="#7A4B2A"></a-cylinder>
+      <a-cylinder radius="0.03" height="0.75" position="0.33 0.375 0.23" color="#7A4B2A"></a-cylinder>
+    </a-entity>
+
+    <!-- Tokoh utama: botol plastik -->
+    <a-entity id="botol" position="1.25 0.78 -1.25" scale="2.2 2.2 2.2" botol-plastik></a-entity>
+
+    <!-- Tahap 1: pengantar -->
+    <a-entity id="pengantar">
+      <a-entity id="panel-pengantar" position="0 2.15 -2.8"
+                panel-info="judul: Jejak Plastik;
+                            isi: Botol di atas meja itu baru saja kamu habiskan. Kebanyakan orang mengira sampah hilang begitu dibuang. Ikuti botol ini dan lihat ke mana sampah plastik benar-benar pergi.;
+                            lebar: 2.2"></a-entity>
+      <a-entity id="tombol-mulai" position="0 1.3 -2.75" tombol="teks: Mulai; lebar: 1"></a-entity>
+    </a-entity>
+
+    <!-- Tahap 2: tiga pilihan -->
+    <a-entity id="pilihan" visible="false">
+      <a-entity position="0 2.3 -3.1" panel-info="judul: Ke mana botol ini kamu buang?;
+                isi: Pilih salah satu. Pilihanmu menentukan perjalanan botol selanjutnya.; lebar: 2.4"></a-entity>
+
+      <!-- Selokan -->
+      <a-entity id="obj-selokan" position="-1.8 0 -3.2" sorot>
+        <a-box width="1.2" height="0.2" depth="0.6" position="0 0.1 0" color="#8E8E86"></a-box>
+        <a-box width="1" height="0.05" depth="0.42" position="0 0.18 0" color="#2F3A33"></a-box>
+        <a-box width="0.04" height="0.03" depth="0.44" position="-0.3 0.215 0" color="#5A5F5C"></a-box>
+        <a-box width="0.04" height="0.03" depth="0.44" position="0 0.215 0" color="#5A5F5C"></a-box>
+        <a-box width="0.04" height="0.03" depth="0.44" position="0.3 0.215 0" color="#5A5F5C"></a-box>
+      </a-entity>
+      <a-entity id="pilih-selokan" position="-1.8 1.45 -3.15" tombol="teks: Buang ke selokan; lebar: 1.4"></a-entity>
+
+      <!-- Tempat sampah -->
+      <a-entity id="obj-tempat-sampah" position="0 0 -3.2" sorot>
+        <a-cylinder radius="0.3" height="0.8" position="0 0.4 0" color="#3C8D4E"></a-cylinder>
+        <a-cylinder radius="0.33" height="0.08" position="0 0.84 0" color="#2C6B3A"></a-cylinder>
+      </a-entity>
+      <a-entity id="pilih-tempat-sampah" position="0 1.45 -3.15" tombol="teks: Tempat sampah biasa; lebar: 1.4"></a-entity>
+
+      <!-- Bank sampah -->
+      <a-entity id="obj-bank-sampah" position="1.8 0 -3.2" sorot>
+        <a-box width="1" height="1" depth="0.6" position="0 0.5 0" color="#F2C230"></a-box>
+        <a-box width="1.15" height="0.08" depth="0.75" position="0 1.04 0" color="#2E9E5B"></a-box>
+        <a-text value="BANK SAMPAH" align="center" color="#0E3B43" width="0.75" wrap-count="7" position="0 0.55 0.31" font="exo2bold"></a-text>
+      </a-entity>
+      <a-entity id="pilih-bank-sampah" position="1.8 1.45 -3.15" tombol="teks: Setor ke bank sampah; lebar: 1.4"></a-entity>
+    </a-entity>
+
+  </a-scene>
+</body>
+</html>

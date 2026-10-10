@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Jejak Plastik VR | Laut</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/laut.js"></script>
+</head>
+<body>
+  <div class="petunjuk">
+    <strong>Laptop:</strong> seret layar untuk melihat sekeliling, klik tombol biru.<br>
+    <strong>HP:</strong> gerakkan HP, tatap tombol biru 1,5 detik.
+  </div>
+
+  <a-scene jp-setup="umur: 1 tahun" fog="type: exponential; color: #0E4A6B; density: 0.08"
+           loading-screen="dotsColor: #1F5FD1; backgroundColor: #E4F2EF">
+
+    <a-assets>
+      <!-- Model 3D eksternal: ikan (CC0, KhronosGroup glTF Sample Assets) -->
+      <a-asset-item id="model-ikan" src="assets/models/ikan.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- Suasana bawah laut tanpa foto 360: langit diganti warna air -->
+    <a-sky color="#0B3D5C"></a-sky>
+    <a-plane width="80" height="80" rotation="-90 0 0" color="#BFA77A" material="roughness: 1"></a-plane>
+
+    <a-entity light="type: ambient; color: #9FD8F0; intensity: 0.7"></a-entity>
+    <a-entity light="type: directional; color: #CFF1FF; intensity: 1.1" position="0 10 2"></a-entity>
+
+    <a-entity id="kamera" camera look-controls wasd-controls="enabled: false" position="0 1.6 0"></a-entity>
+
+    <!-- Rumput laut dan berkas cahaya (diisi oleh laut.js) -->
+    <a-entity id="rumput-laut"></a-entity>
+    <a-entity id="berkas-cahaya"></a-entity>
+
+    <!-- Kawanan ikan berenang memutar -->
+    <a-entity id="kawanan" position="0 0 -4"></a-entity>
+
+    <!-- Ikan yang akan "memakan" mikroplastik -->
+    <a-entity id="ikan-lapar" gltf-model="#model-ikan" position="-5 1.4 -2.6" rotation="0 90 0" scale="2.2 2.2 2.2"></a-entity>
+
+    <!-- Penyu yang terjerat cincin plastik (objek primitif) -->
+    <a-entity id="penyu" position="-1.9 1.1 -3.2" rotation="0 65 0" sorot
+              animation="property: position; dir: alternate; loop: true; dur: 3000; easing: easeInOutSine; to: -1.7 1.25 -3.3">
+      <a-sphere radius="0.5" scale="1 0.32 1.25" color="#5E7D3A"></a-sphere>
+      <a-sphere radius="0.17" position="0 0.02 0.7" color="#8DA35C"></a-sphere>
+      <a-torus radius="0.15" radius-tubular="0.018" position="0 0.02 0.58" color="#F4F4F4"
+               material="opacity: 0.8; transparent: true"></a-torus>
+      <a-box width="0.5" height="0.04" depth="0.2" position="-0.5 -0.02 0.3" rotation="0 30 -10" color="#8DA35C"
+             animation="property: rotation; dir: alternate; loop: true; dur: 900; to: 0 30 20"></a-box>
+      <a-box width="0.5" height="0.04" depth="0.2" position="0.5 -0.02 0.3" rotation="0 -30 10" color="#8DA35C"
+             animation="property: rotation; dir: alternate; loop: true; dur: 900; to: 0 -30 -20"></a-box>
+    </a-entity>
+
+    <!-- Botol plastik terapung -->
+    <a-entity id="botol" position="1.1 1.25 -2.4" sorot>
+      <a-entity botol-plastik scale="2.2 2.2 2.2" rotation="70 0 30"
+                animation="property: rotation; dir: alternate; loop: true; dur: 2500; easing: easeInOutSine; to: 85 20 40"></a-entity>
+    </a-entity>
+
+    <!-- Wadah serpihan mikroplastik -->
+    <a-entity id="mikroplastik" position="1.1 1.4 -2.4"></a-entity>
+
+    <!-- Panel dan tombol -->
+    <a-entity id="panel" position="0 2.55 -3"
+              panel-info="judul: Sampai di laut;
+                          isi: Banyak sampah plastik di laut berasal dari daratan, terbawa sungai seperti botolmu. Lihat penyu di sebelah kiri, ada sesuatu yang melilit lehernya.;
+                          lebar: 2.3"></a-entity>
+    <a-entity id="tombol-pecah" position="0 1.75 -2.95" tombol="teks: Lihat botol 20 tahun lagi; lebar: 1.7"></a-entity>
+    <a-entity id="tombol-lanjut" position="0 1.75 -2.95" tombol="teks: Ikuti ikan ini; lebar: 1.7"></a-entity>
+
+  </a-scene>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Jejak Plastik VR | Sungai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/sungai.js"></script>
+</head>
+<body>
+  <div class="petunjuk">
+    <strong>Laptop:</strong> seret layar untuk melihat sekeliling, klik tombol biru.<br>
+    <strong>HP:</strong> gerakkan HP, tatap tombol biru 1,5 detik.
+  </div>
+
+  <a-scene jp-setup="umur: 2 minggu" loading-screen="dotsColor: #1F5FD1; backgroundColor: #E4F2EF">
+
+    <!-- Lingkungan: langit mendung -->
+    <a-entity environment="preset: default; seed: 9; skyType: gradient; skyColor: #AFC2C9; horizonColor: #E1E5DE;
+                           lighting: none; ground: flat; groundTexture: walkernoise; groundColor: #7D9A5C; groundColor2: #6F8C51;
+                           dressing: none; grid: none; fog: 0"></a-entity>
+
+    <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.75"></a-entity>
+    <a-entity light="type: directional; color: #F3F1E8; intensity: 0.9" position="-2 5 3"></a-entity>
+
+    <a-entity id="kamera" camera look-controls wasd-controls="enabled: false" position="0 1.6 0"></a-entity>
+
+    <!-- Sungai keruh: membentang dari kiri ke kanan -->
+    <a-plane id="air-sungai" width="40" height="3" rotation="-90 0 0" position="0 0.04 -3.5"
+             material="color: #7A6A48; roughness: 0.4; metalness: 0.1"></a-plane>
+    <!-- Garis arus (bergerak pelan agar air terlihat mengalir) -->
+    <a-entity id="arus"></a-entity>
+
+    <!-- Pipa selokan di kiri, tempat botol keluar -->
+    <a-cylinder radius="0.35" height="1.2" rotation="0 0 90" position="-4.4 0.45 -2.6"
+                color="#9A9A92" open-ended="true" material="side: double"></a-cylinder>
+
+    <!-- Gorong-gorong di kanan -->
+    <a-entity id="gorong-gorong" position="3.7 0 -3.5">
+      <a-box width="1.2" height="0.9" depth="3.4" position="0.6 0.45 0" color="#A3A39B"></a-box>
+      <a-box width="0.05" height="0.55" depth="1.6" position="-0.01 0.28 0" color="#1E2622"></a-box>
+    </a-entity>
+
+    <!-- Tumpukan sampah di depan gorong-gorong (diisi oleh sungai.js) -->
+    <a-entity id="tumpukan" position="3.1 0.05 -3.5" sorot="skala: 1.05"></a-entity>
+
+    <!-- Permukiman di seberang sungai -->
+    <a-entity id="permukiman"></a-entity>
+
+    <!-- Botol plastik yang hanyut -->
+    <a-entity id="botol" position="-4.2 0.2 -3.3">
+      <a-entity id="botol-bergoyang" botol-plastik scale="2.2 2.2 2.2" rotation="80 0 20"
+                animation="property: position; dir: alternate; loop: true; dur: 900; easing: easeInOutSine; from: 0 0 0; to: 0 0.05 0"></a-entity>
+    </a-entity>
+
+    <!-- Air banjir (awalnya di bawah tanah) -->
+    <a-plane id="banjir" width="60" height="60" rotation="-90 0 0" position="0 -0.3 -6"
+             material="color: #6E5E3F; opacity: 0.85; transparent: true"></a-plane>
+
+    <!-- Panel dan tombol -->
+    <a-entity id="panel" position="0 2.35 -3"
+              panel-info="judul: Dari selokan ke sungai;
+                          isi: Air selokan membawa botolmu ke sungai. Sungai ini juga menerima sampah dari ribuan rumah lain di sepanjang alirannya.;
+                          lebar: 2.3"></a-entity>
+    <a-entity id="tombol-sumbat" position="0 1.45 -2.95" tombol="teks: Lihat apa yang terjadi; lebar: 1.6"></a-entity>
+    <a-entity id="tombol-lanjut" position="0 1.45 -2.95" tombol="teks: Ikuti botol ke laut; lebar: 1.6"></a-entity>
+
+  </a-scene>
+</body>
+</html>

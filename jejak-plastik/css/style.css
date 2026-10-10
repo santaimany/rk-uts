@@ -1,0 +1,35 @@
+/* Jejak Plastik VR : gaya untuk elemen 2D di luar scene 3D */
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+/* Petunjuk kecil di pojok kiri bawah (tidak terlihat saat mode VR) */
+.petunjuk {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10;
+  max-width: 300px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(14, 59, 67, 0.85);
+  color: #E4F2EF;
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.petunjuk strong {
+  color: #F2C230;
+}
+
+@media (max-width: 480px) {
+  .petunjuk {
+    right: 12px;
+    max-width: none;
+    font-size: 12px;
+  }
+}

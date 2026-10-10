@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Jejak Plastik VR | Meja Makan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/piring.js"></script>
+</head>
+<body>
+  <div class="petunjuk">
+    <strong>Laptop:</strong> seret layar untuk melihat sekeliling, klik tombol biru.<br>
+    <strong>HP:</strong> gerakkan HP, tatap tombol biru 1,5 detik.
+  </div>
+
+  <a-scene jp-setup="umur: 25 tahun" loading-screen="dotsColor: #1F5FD1; backgroundColor: #E4F2EF">
+
+    <a-assets>
+      <!-- Model 3D eksternal: ikan (CC0, KhronosGroup glTF Sample Assets) -->
+      <a-asset-item id="model-ikan" src="assets/models/ikan.glb"></a-asset-item>
+    </a-assets>
+
+    <a-sky color="#3A2A1E"></a-sky>
+
+    <!-- Cahaya hangat ruang makan -->
+    <a-entity light="type: ambient; color: #FFE6C7; intensity: 0.6"></a-entity>
+    <a-entity light="type: point; color: #FFD9A0; intensity: 2.5; distance: 8; decay: 1" position="0 2.6 -1.3"></a-entity>
+
+    <!-- Pengguna duduk di depan meja, jadi kamera lebih rendah -->
+    <a-entity id="kamera" camera look-controls wasd-controls="enabled: false" position="0 1.05 0"></a-entity>
+
+    <!-- Ruangan -->
+    <a-entity id="ruangan">
+      <a-plane width="8" height="8" rotation="-90 0 0" color="#8B5E3C"></a-plane>
+      <a-box width="8" height="3.2" depth="0.1" position="0 1.6 -3.2" color="#E8D3B0"></a-box>
+      <a-box width="0.1" height="3.2" depth="8" position="-3 1.6 0" color="#E0C9A3"></a-box>
+      <a-box width="0.1" height="3.2" depth="8" position="3 1.6 0" color="#E0C9A3"></a-box>
+      <!-- Jendela dengan pemandangan laut -->
+      <a-box width="1.6" height="1" depth="0.05" position="-1.7 1.9 -3.12" color="#3C8FB8"></a-box>
+      <a-box width="1.7" height="0.08" depth="0.08" position="-1.7 2.42 -3.1" color="#6B4A2E"></a-box>
+    </a-entity>
+
+    <!-- Meja makan -->
+    <a-entity id="meja" position="0 0 -1.25">
+      <a-box width="1.6" height="0.06" depth="0.9" position="0 0.75 0" color="#9C6B43"></a-box>
+      <a-box width="1.65" height="0.01" depth="0.95" position="0 0.785 0" color="#F3EFE6"></a-box>
+      <a-cylinder radius="0.04" height="0.75" position="-0.7 0.375 -0.35" color="#6B4A2E"></a-cylinder>
+      <a-cylinder radius="0.04" height="0.75" position="0.7 0.375 -0.35" color="#6B4A2E"></a-cylinder>
+      <a-cylinder radius="0.04" height="0.75" position="-0.7 0.375 0.35" color="#6B4A2E"></a-cylinder>
+      <a-cylinder radius="0.04" height="0.75" position="0.7 0.375 0.35" color="#6B4A2E"></a-cylinder>
+    </a-entity>
+
+    <!-- Hidangan -->
+    <a-cylinder id="piring" radius="0.3" height="0.02" position="0 0.8 -1.1" color="#FFFFFF"></a-cylinder>
+    <a-entity id="ikan" gltf-model="#model-ikan" position="0.02 0.84 -1.1" rotation="0 90 90" scale="0.85 0.85 0.85" sorot></a-entity>
+    <a-sphere radius="0.13" scale="1 0.6 1" position="-0.45 0.82 -1.15" color="#FAFAF5"></a-sphere>
+    <a-cylinder radius="0.17" height="0.02" position="-0.45 0.8 -1.15" color="#FFFFFF"></a-cylinder>
+    <a-cylinder radius="0.045" height="0.16" position="0.45 0.87 -1.25" color="#DDF3FF"
+                material="opacity: 0.45; transparent: true"></a-cylinder>
+
+    <!-- Mikroplastik di dalam ikan (awalnya tersembunyi) -->
+    <a-entity id="isi-ikan" position="0.02 0.86 -1.1" visible="false"></a-entity>
+
+    <!-- Panel dan tombol -->
+    <a-entity id="panel" position="0 2.05 -2.5"
+              panel-info="judul: Makan malam;
+                          isi: Ikan dari laut tadi ditangkap nelayan, dijual di pasar, lalu dimasak untuk makan malam. Terlihat lezat dan segar. Tapi coba lihat lebih dekat.;
+                          lebar: 2.2"></a-entity>
+    <a-entity id="tombol-lihat" position="0 1.2 -2.45" tombol="teks: Lihat isi ikan; lebar: 1.5"></a-entity>
+    <a-entity id="tombol-lanjut" position="0 1.2 -2.45" tombol="teks: Apa yang bisa kita lakukan?; lebar: 1.9; hurufPerBaris: 28"></a-entity>
+
+  </a-scene>
+</body>
+</html>
