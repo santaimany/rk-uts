@@ -161,7 +161,7 @@
       // HUD umur botol (menempel di kamera)
       var hud = document.createElement('a-entity');
       hud.setAttribute('id', 'jp-hud');
-      hud.setAttribute('position', '0 -0.21 -0.5');
+      hud.setAttribute('position', '0 -0.26 -0.5');
       hud.setAttribute('geometry', 'primitive: plane; width: 0.52; height: 0.044');
       hud.setAttribute('material', 'color: ' + PALET.teks + '; shader: flat');
       var hudTeks = document.createElement('a-entity');
@@ -252,38 +252,65 @@
     },
 
     init: function () {
+      var self = this;
       this.latar = document.createElement('a-entity');
       this.judulEl = document.createElement('a-entity');
       this.isiEl = document.createElement('a-entity');
       this.el.appendChild(this.latar);
       this.el.appendChild(this.judulEl);
       this.el.appendChild(this.isiEl);
+      // Setelah huruf selesai dimuat, ukur ulang tinggi teks yang sebenarnya
+      this.judulEl.addEventListener('textfontset', function () { self.rapikan(); });
+      this.isiEl.addEventListener('textfontset', function () { self.rapikan(); });
     },
 
     update: function () {
       var d = this.data;
-      // Perkiraan jumlah baris agar tinggi panel menyesuaikan isi
-      var baris = Math.max(1, Math.ceil((d.isi.length * 1.25) / d.hurufPerBaris));
-      var tinggiBaris = ((d.lebar - 0.2) / d.hurufPerBaris) * 1.7;
-      var barisJudul = d.judul ? Math.ceil(d.judul.length / 28) : 0;
-      var tinggiJudul = d.judul ? 0.08 + barisJudul * ((d.lebar - 0.2) / 24) * 1.7 : 0;
-      var tinggi = 0.22 + tinggiJudul + baris * tinggiBaris;
-
-      this.latar.setAttribute('geometry', { primitive: 'plane', width: d.lebar, height: tinggi });
-      this.latar.setAttribute('material', { color: PALET.panel, opacity: 0.94, transparent: true, shader: 'flat' });
-
-      var atas = tinggi / 2 - 0.11;
-      this.judulEl.setAttribute('position', { x: 0, y: atas, z: 0.01 });
       this.judulEl.setAttribute('text', {
         value: d.judul, align: 'left', anchor: 'center', baseline: 'top',
         color: PALET.tombol, width: d.lebar - 0.2, wrapCount: 24, font: 'exo2bold'
       });
-
-      this.isiEl.setAttribute('position', { x: 0, y: atas - tinggiJudul, z: 0.01 });
       this.isiEl.setAttribute('text', {
         value: d.isi, align: 'left', anchor: 'center', baseline: 'top',
         color: PALET.teks, width: d.lebar - 0.2, wrapCount: d.hurufPerBaris, font: 'exo2semibold'
       });
+      this.latar.setAttribute('material', { color: PALET.panel, opacity: 0.94, transparent: true, shader: 'flat' });
+
+      // Susunan awal berdasarkan perkiraan, lalu dirapikan setelah teks tampil
+      var baris = Math.max(1, Math.ceil((d.isi.length * 1.25) / d.hurufPerBaris));
+      var tinggiJudul = d.judul ? 0.08 + Math.ceil(d.judul.length / 22) * ((d.lebar - 0.2) / 24) * 1.7 : 0;
+      var tinggiIsi = baris * ((d.lebar - 0.2) / d.hurufPerBaris) * 1.7;
+      this.susun(tinggiJudul, tinggiIsi);
+
+      var self = this;
+      setTimeout(function () { self.rapikan(); }, 50);
+      setTimeout(function () { self.rapikan(); }, 400);
+    },
+
+    /** Ukur tinggi teks yang benar-benar dirender (dalam meter) */
+    ukurTinggi: function (el) {
+      var mesh = el.getObject3D('text');
+      if (!mesh || !mesh.geometry) return null;
+      mesh.geometry.computeBoundingBox();
+      var kotak = mesh.geometry.boundingBox;
+      if (!kotak || !isFinite(kotak.max.y)) return 0;
+      return (kotak.max.y - kotak.min.y) * Math.abs(mesh.scale.y);
+    },
+
+    rapikan: function () {
+      var tj = this.data.judul ? this.ukurTinggi(this.judulEl) : 0;
+      var ti = this.data.isi ? this.ukurTinggi(this.isiEl) : 0;
+      if (tj === null || ti === null) return;
+      this.susun(tj ? tj + 0.08 : 0, ti);
+    },
+
+    susun: function (tinggiJudul, tinggiIsi) {
+      var d = this.data;
+      var tinggi = 0.24 + tinggiJudul + tinggiIsi;
+      this.latar.setAttribute('geometry', { primitive: 'plane', width: d.lebar, height: tinggi });
+      var atas = tinggi / 2 - 0.12;
+      this.judulEl.setAttribute('position', { x: 0, y: atas, z: 0.01 });
+      this.isiEl.setAttribute('position', { x: 0, y: atas - tinggiJudul, z: 0.01 });
     }
   });
 
@@ -293,12 +320,45 @@
   // ---------------------------------------------------------------
   AFRAME.registerComponent('botol-plastik', {
     schema: {
+      model: { default: 'assets/models/water_bottle.glb' }, // kosongkan untuk botol primitif
       warnaTutup: { default: '#1F5FD1' },
       warnaLabel: { default: '#2DB37A' },
       bersinar: { default: true }
     },
 
     init: function () {
+      var d = this.data;
+      var el = this.el;
+      var self = this;
+
+      if (d.model) {
+        // Pakai model 3D botol; tingginya disamakan dengan botol primitif (0,24 m)
+        var m = document.createElement('a-entity');
+        m.setAttribute('gltf-model', d.model);
+        m.setAttribute('model-pas', 'ukuran: 0.24; sumbu: tinggi');
+        // Bahan model botol cukup metalik sehingga tampak gelap; dibuat lebih terang
+        m.addEventListener('model-loaded', function (e) {
+          e.detail.model.traverse(function (node) {
+            if (node.isMesh && node.material) {
+              node.material.metalness = 0.15;
+              node.material.roughness = 0.45;
+            }
+          });
+        });
+        m.addEventListener('model-error', function () {
+          // File model tidak ada atau rusak: kembali ke botol primitif
+          if (m.parentNode) m.parentNode.removeChild(m);
+          self.buatPrimitif();
+        });
+        el.appendChild(m);
+      } else {
+        this.buatPrimitif();
+      }
+
+      if (d.bersinar) this.buatCahaya();
+    },
+
+    buatPrimitif: function () {
       var d = this.data;
       var el = this.el;
       var bening = 'color: #CFEFFF; opacity: 0.55; transparent: true; roughness: 0.15; metalness: 0.1';
@@ -319,16 +379,64 @@
         p.setAttribute('position', b[2]);
         el.appendChild(p);
       });
+    },
 
-      if (d.bersinar) {
-        // Lingkaran cahaya agar mata pengguna selalu tertuju ke botol
-        var cahaya = document.createElement('a-entity');
-        cahaya.setAttribute('geometry', 'primitive: sphere; radius: 0.12');
-        cahaya.setAttribute('position', '0 0.12 0');
-        cahaya.setAttribute('material', 'color: ' + PALET.hud + '; opacity: 0.13; transparent: true; shader: flat; side: back');
-        cahaya.setAttribute('animation', 'property: scale; dir: alternate; loop: true; dur: 1100; easing: easeInOutSine; from: 0.9 0.9 0.9; to: 1.15 1.15 1.15');
-        el.appendChild(cahaya);
-      }
+    buatCahaya: function () {
+      // Lingkaran cahaya agar mata pengguna selalu tertuju ke botol
+      var cahaya = document.createElement('a-entity');
+      cahaya.setAttribute('geometry', 'primitive: sphere; radius: 0.12');
+      cahaya.setAttribute('position', '0 0.12 0');
+      cahaya.setAttribute('material', 'color: ' + PALET.hud + '; opacity: 0.13; transparent: true; shader: flat; side: back');
+      cahaya.setAttribute('animation', 'property: scale; dir: alternate; loop: true; dur: 1100; easing: easeInOutSine; from: 0.9 0.9 0.9; to: 1.15 1.15 1.15');
+      this.el.appendChild(cahaya);
+    }
+  });
+
+  // ---------------------------------------------------------------
+  // 6b. Komponen model-pas : menyesuaikan ukuran model .glb secara otomatis
+  //     Model dari Sketchfab ukurannya beragam, jadi diskalakan sampai
+  //     sisi yang dipilih sama dengan "ukuran" (meter), lalu alasnya di y = 0.
+  //     Contoh: <a-entity gltf-model="assets/models/house.glb" model-pas="ukuran: 3; sumbu: lebar">
+  // ---------------------------------------------------------------
+  AFRAME.registerComponent('model-pas', {
+    schema: {
+      ukuran: { default: 1 },
+      sumbu: { default: 'tinggi', oneOf: ['tinggi', 'lebar', 'panjang', 'terbesar'] },
+      dasar: { default: true } // true: alas model tepat di permukaan tanah
+    },
+
+    init: function () {
+      var self = this;
+      this.el.addEventListener('model-loaded', function () { self.pas(); });
+    },
+
+    update: function () {
+      if (this.el.getObject3D('mesh')) this.pas();
+    },
+
+    pas: function () {
+      var model = this.el.getObject3D('mesh');
+      if (!model) return;
+      var d = this.data;
+
+      // Ukur model tanpa pengaruh posisi dan skala entitas induknya
+      model.scale.set(1, 1, 1);
+      model.position.set(0, 0, 0);
+      var induk = model.parent;
+      induk.remove(model);
+      model.updateMatrixWorld(true);
+      var kotak = new THREE.Box3().setFromObject(model);
+      induk.add(model);
+
+      var besar = kotak.getSize(new THREE.Vector3());
+      var tengah = kotak.getCenter(new THREE.Vector3());
+      var acuan = { tinggi: besar.y, lebar: besar.x, panjang: besar.z,
+                    terbesar: Math.max(besar.x, besar.y, besar.z) }[d.sumbu];
+      if (!acuan) return;
+
+      var s = d.ukuran / acuan;
+      model.scale.set(s, s, s);
+      model.position.set(-tengah.x * s, d.dasar ? -kotak.min.y * s : -tengah.y * s, -tengah.z * s);
     }
   });
 

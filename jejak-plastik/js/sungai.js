@@ -33,35 +33,42 @@ JP.saatSiap(function () {
     var h = document.createElement('a-entity');
     h.setAttribute('geometry', 'primitive: box; width: 0.2; height: 0.06; depth: 0.15');
     h.setAttribute('material', 'color: ' + warnaSampah[j % warnaSampah.length]);
-    var z = JP.acak(-4.6, -2.4).toFixed(2);
-    h.setAttribute('position', JP.acak(-12, -5).toFixed(2) + ' 0.07 ' + z);
+    var z = JP.acak(-8.5, -5.5).toFixed(2);
+    h.setAttribute('position', JP.acak(-12, -5).toFixed(2) + ' -0.9 ' + z);
     h.setAttribute('animation', {
-      property: 'position', to: '2.2 0.07 ' + z, dur: JP.acak(14000, 22000), easing: 'linear', loop: true
+      property: 'position', to: '2.2 -0.9 ' + z, dur: JP.acak(14000, 22000), easing: 'linear', loop: true
     });
     document.querySelector('#arus').appendChild(h);
   }
 
-  // 3. Permukiman di seberang sungai (rumah sederhana dari primitif)
-  var warnaDinding = ['#E9C9A0', '#CFE3D2', '#F1E1B0', '#D9C7E6'];
+  // 2b. Air sungai pada model lanskap dibuat keruh kehijauan agar terlihat tercemar
+  document.querySelector('#lanskap').addEventListener('model-loaded', function (e) {
+    e.detail.model.traverse(function (node) {
+      if (node.isMesh && node.name.toLowerCase().indexOf('water') !== -1) {
+        node.material = node.material.clone();
+        node.material.color = new THREE.Color('#7FA096');
+        node.material.emissive = new THREE.Color('#1E3A34');
+        node.material.transparent = true;
+        node.material.opacity = 0.9;
+        node.material.roughness = 0.25;
+        node.material.metalness = 0;
+        node.material.depthWrite = true;
+      }
+    });
+  });
+
+  // 3. Permukiman di seberang sungai (model 3D eksternal: house.glb)
   for (var k = 0; k < 6; k++) {
     var r = document.createElement('a-entity');
-    r.setAttribute('position', (-7.5 + k * 3).toFixed(2) + ' 0 ' + JP.acak(-9.5, -8).toFixed(2));
-    var dinding = document.createElement('a-box');
-    dinding.setAttribute('width', 2); dinding.setAttribute('height', 1.8); dinding.setAttribute('depth', 2);
-    dinding.setAttribute('position', '0 0.9 0');
-    dinding.setAttribute('color', warnaDinding[k % warnaDinding.length]);
-    var atap = document.createElement('a-cone');
-    atap.setAttribute('radius-bottom', 1.7); atap.setAttribute('radius-top', 0);
-    atap.setAttribute('height', 1); atap.setAttribute('segments-radial', 4);
-    atap.setAttribute('rotation', '0 45 0'); atap.setAttribute('position', '0 2.3 0');
-    atap.setAttribute('color', '#A9502E');
-    r.appendChild(dinding); r.appendChild(atap);
+    r.setAttribute('gltf-model', 'assets/models/house.glb');
+    r.setAttribute('model-pas', 'ukuran: 2.3; sumbu: lebar');
+    r.setAttribute('position', (-8 + k * 3.2).toFixed(2) + ' 0.1 ' + JP.acak(-15, -13.5).toFixed(2));
     document.querySelector('#permukiman').appendChild(r);
   }
 
   // 4. Botol hanyut dari pipa menuju tumpukan sampah
   botol.setAttribute('animation__hanyut', {
-    property: 'position', to: '2.4 0.2 -3.4', dur: 7000, easing: 'easeOutSine'
+    property: 'position', to: '2.4 -0.85 -5.45', dur: 7000, easing: 'easeOutSine'
   });
   botol.addEventListener('animationcomplete__hanyut', function () {
     JP.tampil(tombolSumbat, true);
@@ -74,12 +81,13 @@ JP.saatSiap(function () {
     sudahBanjir = true;
     JP.tampil(tombolSumbat, false);
 
+    banjir.setAttribute('visible', true);
     banjir.setAttribute('animation__naik', {
-      property: 'position', to: '0 0.5 -6', dur: 4000, easing: 'easeInOutQuad'
+      property: 'position', to: '0 0.4 -7', dur: 4000, easing: 'easeInOutQuad'
     });
     // Botol ikut terangkat air banjir
     botol.setAttribute('animation__naik', {
-      property: 'position', to: '1.6 0.65 -2.9', dur: 4000, easing: 'easeInOutQuad'
+      property: 'position', to: '2 0.5 -5.2', dur: 4000, easing: 'easeInOutQuad'
     });
 
     JP.setPanel('#panel', 'Saluran tersumbat, air meluap',

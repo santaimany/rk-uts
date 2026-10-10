@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-  <script src="js/common.js"></script>
+  <script src="js/common.js?v=5"></script>
   <script src="js/daurulang.js"></script>
 </head>
 <body>
@@ -84,43 +84,36 @@
       <a-box width="2.6" height="0.06" depth="0.6" position="0 0.75 0" color="#F3EFE6"></a-box>
       <a-box width="2.5" height="0.72" depth="0.5" position="0 0.36 0" color="#D9D2C3"></a-box>
 
-      <!-- Kaos dari serat polyester -->
-      <a-entity id="produk-kaos" position="-0.95 0.95 0" sorot>
-        <a-box width="0.26" height="0.32" depth="0.04" color="#2DB37A"></a-box>
-        <a-box width="0.12" height="0.1" depth="0.04" position="-0.17 0.1 0" rotation="0 0 30" color="#2DB37A"></a-box>
-        <a-box width="0.12" height="0.1" depth="0.04" position="0.17 0.1 0" rotation="0 0 -30" color="#2DB37A"></a-box>
+      <!-- Kaos dari serat polyester (model 3D eksternal: t-shirt.glb) -->
+      <a-entity id="produk-kaos" position="-0.95 0.78 0" sorot>
+        <a-entity gltf-model="assets/models/t-shirt.glb" model-pas="ukuran: 0.36; sumbu: tinggi"></a-entity>
       </a-entity>
       <a-entity position="-0.95 1.28 0">
         <a-plane width="0.5" height="0.1" color="#FFFFFF" material="shader: flat"></a-plane>
         <a-text value="Kaos" align="center" color="#0E3B43" width="1.2" font="exo2bold" position="0 0 0.005"></a-text>
       </a-entity>
 
-      <!-- Tas belanja -->
-      <a-entity id="produk-tas" position="-0.32 0.92 0" sorot>
-        <a-box width="0.28" height="0.28" depth="0.1" color="#1F5FD1"></a-box>
-        <a-torus radius="0.08" radius-tubular="0.012" position="0 0.16 0" color="#1F5FD1"></a-torus>
+      <!-- Tas belanja (model 3D eksternal: renova_shopping_bag_03.glb) -->
+      <a-entity id="produk-tas" position="-0.32 0.78 0" sorot>
+        <a-entity gltf-model="assets/models/renova_shopping_bag_03.glb" model-pas="ukuran: 0.36; sumbu: tinggi"></a-entity>
       </a-entity>
       <a-entity position="-0.32 1.28 0">
         <a-plane width="0.5" height="0.1" color="#FFFFFF" material="shader: flat"></a-plane>
         <a-text value="Tas belanja" align="center" color="#0E3B43" width="1.2" font="exo2bold" position="0 0 0.005"></a-text>
       </a-entity>
 
-      <!-- Pot tanaman -->
+      <!-- Pot tanaman (model 3D eksternal: flower_in_a_pot.glb) -->
       <a-entity id="produk-pot" position="0.32 0.78 0" sorot>
-        <a-cylinder radius="0.11" height="0.18" position="0 0.09 0" color="#E8562A"></a-cylinder>
-        <a-cone radius-bottom="0.04" radius-top="0" height="0.26" position="0 0.3 0" color="#3F9A52"></a-cone>
-        <a-cone radius-bottom="0.035" radius-top="0" height="0.2" position="0.05 0.26 0" rotation="0 0 -25" color="#4FB062"></a-cone>
-        <a-cone radius-bottom="0.035" radius-top="0" height="0.2" position="-0.05 0.26 0" rotation="0 0 25" color="#4FB062"></a-cone>
+        <a-entity gltf-model="assets/models/flower_in_a_pot.glb" model-pas="ukuran: 0.42; sumbu: tinggi"></a-entity>
       </a-entity>
       <a-entity position="0.32 1.28 0">
         <a-plane width="0.5" height="0.1" color="#FFFFFF" material="shader: flat"></a-plane>
         <a-text value="Pot tanaman" align="center" color="#0E3B43" width="1.2" font="exo2bold" position="0 0 0.005"></a-text>
       </a-entity>
 
-      <!-- Paving block -->
-      <a-entity id="produk-paving" position="0.95 0.8 0" sorot>
-        <a-cylinder radius="0.12" height="0.06" segments-radial="6" position="-0.06 0.03 0" color="#8E8E86"></a-cylinder>
-        <a-cylinder radius="0.12" height="0.06" segments-radial="6" position="0.08 0.03 0.08" color="#7E7E77"></a-cylinder>
+      <!-- Paving block (model 3D eksternal: paving_stone.glb) -->
+      <a-entity id="produk-paving" position="0.95 0.78 0" sorot>
+        <a-entity gltf-model="assets/models/paving_stone.glb" model-pas="ukuran: 0.32; sumbu: lebar"></a-entity>
       </a-entity>
       <a-entity position="0.95 1.28 0">
         <a-plane width="0.5" height="0.1" color="#FFFFFF" material="shader: flat"></a-plane>

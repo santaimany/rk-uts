@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
-  <script src="js/common.js"></script>
+  <script src="js/common.js?v=5"></script>
   <script src="js/rumah.js"></script>
 </head>
 <body>
@@ -30,15 +30,9 @@
     <!-- Kamera (posisi mata pengguna) -->
     <a-entity id="kamera" camera look-controls wasd-controls="enabled: false" position="0 1.6 0"></a-entity>
 
-    <!-- Rumah di latar belakang (objek primitif) -->
-    <a-entity id="rumah" position="0 0 -7">
-      <a-box width="9" height="3.2" depth="0.3" position="0 1.6 0" color="#F1D3A6"></a-box>
-      <a-cylinder radius="1.2" height="9.8" segments-radial="3" position="0 3.75 0" rotation="0 0 90"
-                  scale="1 1 0.5" color="#B5532F"></a-cylinder>
-      <a-box width="1.1" height="2.1" depth="0.1" position="0 1.05 0.2" color="#7A4B2A"></a-box>
-      <a-box width="1.4" height="1" depth="0.1" position="-2.6 1.8 0.2" color="#BFE6F7"></a-box>
-      <a-box width="1.4" height="1" depth="0.1" position="2.6 1.8 0.2" color="#BFE6F7"></a-box>
-    </a-entity>
+    <!-- Rumah di latar belakang (model 3D eksternal: house.glb) -->
+    <a-entity id="rumah" position="0 0 -11" rotation="0 0 0"
+              gltf-model="assets/models/house.glb" model-pas="ukuran: 8; sumbu: lebar"></a-entity>
 
     <!-- Meja kecil dengan botol di atasnya -->
     <a-entity id="meja" position="1.25 0 -1.25">
@@ -66,28 +60,23 @@
       <a-entity position="0 2.3 -3.1" panel-info="judul: Ke mana botol ini kamu buang?;
                 isi: Pilih salah satu. Pilihanmu menentukan perjalanan botol selanjutnya.; lebar: 2.4"></a-entity>
 
-      <!-- Selokan -->
+      <!-- Selokan (model 3D eksternal: drainage_grate.glb) -->
       <a-entity id="obj-selokan" position="-1.8 0 -3.2" sorot>
-        <a-box width="1.2" height="0.2" depth="0.6" position="0 0.1 0" color="#8E8E86"></a-box>
-        <a-box width="1" height="0.05" depth="0.42" position="0 0.18 0" color="#2F3A33"></a-box>
-        <a-box width="0.04" height="0.03" depth="0.44" position="-0.3 0.215 0" color="#5A5F5C"></a-box>
-        <a-box width="0.04" height="0.03" depth="0.44" position="0 0.215 0" color="#5A5F5C"></a-box>
-        <a-box width="0.04" height="0.03" depth="0.44" position="0.3 0.215 0" color="#5A5F5C"></a-box>
+        <a-entity gltf-model="assets/models/drainage_grate.glb" model-pas="ukuran: 1.1; sumbu: lebar"></a-entity>
       </a-entity>
       <a-entity id="pilih-selokan" position="-1.8 1.45 -3.15" tombol="teks: Buang ke selokan; lebar: 1.4"></a-entity>
 
-      <!-- Tempat sampah -->
+      <!-- Tempat sampah biasa (model 3D eksternal: garbage_bin.glb) -->
       <a-entity id="obj-tempat-sampah" position="0 0 -3.2" sorot>
-        <a-cylinder radius="0.3" height="0.8" position="0 0.4 0" color="#3C8D4E"></a-cylinder>
-        <a-cylinder radius="0.33" height="0.08" position="0 0.84 0" color="#2C6B3A"></a-cylinder>
+        <a-entity gltf-model="assets/models/garbage_bin.glb" model-pas="ukuran: 0.95; sumbu: tinggi"></a-entity>
       </a-entity>
       <a-entity id="pilih-tempat-sampah" position="0 1.45 -3.15" tombol="teks: Tempat sampah biasa; lebar: 1.4"></a-entity>
 
-      <!-- Bank sampah -->
+      <!-- Bank sampah (model 3D eksternal: garbage_bin_banksampah.glb) -->
       <a-entity id="obj-bank-sampah" position="1.8 0 -3.2" sorot>
-        <a-box width="1" height="1" depth="0.6" position="0 0.5 0" color="#F2C230"></a-box>
-        <a-box width="1.15" height="0.08" depth="0.75" position="0 1.04 0" color="#2E9E5B"></a-box>
-        <a-text value="BANK SAMPAH" align="center" color="#0E3B43" width="0.75" wrap-count="7" position="0 0.55 0.31" font="exo2bold"></a-text>
+        <a-entity gltf-model="assets/models/garbage_bin_banksampah.glb" model-pas="ukuran: 0.8; sumbu: tinggi"></a-entity>
+        <a-plane width="0.9" height="0.18" position="0 1.0 0" color="#2E9E5B" material="shader: flat"></a-plane>
+        <a-text value="BANK SAMPAH" align="center" color="#FFFFFF" width="0.85" wrap-count="12" font="exo2bold" position="0 1.0 0.01"></a-text>
       </a-entity>
       <a-entity id="pilih-bank-sampah" position="1.8 1.45 -3.15" tombol="teks: Setor ke bank sampah; lebar: 1.4"></a-entity>
     </a-entity>
